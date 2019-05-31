@@ -1,7 +1,8 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 
-let UserSchema = mongoose.Schema ({
+let UserSchema = new Schema ({
     username: {
         type: String,
         required: true
@@ -17,7 +18,8 @@ let UserSchema = mongoose.Schema ({
     status: {
         type: String,
         required: true
-    }
+    },
+    Contacts : [{ type: Schema.Types.ObjectId, ref: 'contact' }]
 
 });
 

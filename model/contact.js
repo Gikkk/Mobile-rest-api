@@ -1,7 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 
-let contactSchema = mongoose.Schema ({ 
+let contactSchema = new Schema ({
+    _creator : { type: Schema.Types.ObjectId, ref: 'Person' },
+
     name: {
         type: String,
         required: true
@@ -14,6 +17,7 @@ let contactSchema = mongoose.Schema ({
         type: String,
         required: true
     },
+    
     
 
 });
