@@ -114,13 +114,22 @@ router.put('/contacts/edit', (req,res)=>{
       );
 })
 
-
+// Postman check, delete request, JSON
+// {   
+//   "id":"5ceea9da1c5b690b387d80b4"
+// }
 router.delete('/contacts/remove', (req, res)=>{
     let delContact = req.body.id
-    Contacts.deleteOne({ _id: delContact }, function(err) { 
-          if (err)  throw err;
-          res.send('Deleted')
-      });
+    Contacts.findByIdAndRemove(delContact, (err, contact) => {
+   
+      if (err) return res.status(500).send(err);
+  
+      const response = {
+          message: "Contact successfully deleted",
+          id: contact._id
+      };
+      return res.status(200).send(response);
+  });  
   });
   
 
