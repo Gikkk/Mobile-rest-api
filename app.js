@@ -26,7 +26,7 @@ mongoose.set('useFindAndModify', false);
 
 // Routes
 app.use('/', mainR);
-app.use('/users', userR)
+app.use('/api', userR)
 
 
 app.listen(port, () => console.log(`listening on port ${port}!`));
