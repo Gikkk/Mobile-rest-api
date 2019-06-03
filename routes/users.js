@@ -3,37 +3,37 @@ const router = express.Router();
 const User = require('../model/userschema');
 const Contacts = require('../model/contact');
 const bcrypt = require('bcryptjs')
-const { check, validationResult } = require('express-validator/check');
 
 
+// Postman check, Get request, 
 router.get('/register', (req, res)=>{
     res.send('Please register!!!')
 })
 
+// Postman check, Get request, 
 router.get('/login',(req,res)=>{
   res.send('Please login!!!')
   })
 
+
 // Postman check, Post request, JSON
+// http://localhost:5000/api/register
 // {
-//  "username": "gio",
-// 	"email": "giogi@gmail.com",
+//  "username": "test",
+// 	"email": "test@gmail.com",
 // 	"password": "12345"
 // }
 router.post('/register', (req, res)=>{
     const { email, username, password } = req.body;
     const status = "user"
     
-    
-    
-
     const newUser = new User({
         username,
         email,
         password,
         status: status
-
       });
+      
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
           if (err) throw err;
@@ -41,7 +41,6 @@ router.post('/register', (req, res)=>{
           newUser
             .save()
             .then(user => {
-              console.log(hash);
                 
             })
             .catch(err => console.log(err)
@@ -52,12 +51,11 @@ router.post('/register', (req, res)=>{
 })
 
 // Postman check, Post request, JSON
+// http://localhost:5000/api/register
 // {
-// 	"email": "giogi@",
+// 	"email": "test@gmail.com",
 // 	"password": "12345"
 // }
-
-
 router.post('/login', (req,res)=>{ 
     const email = req.body.email;
     const password = req.body.password   
@@ -78,6 +76,7 @@ router.post('/login', (req,res)=>{
 })
 
 // Postman check, Post request, JSON
+// http://localhost:5000/api/contacts/add
 // {
 // 	"name": "gio",
 // 	"surname": "zhon",
@@ -99,10 +98,11 @@ router.post('/contacts/add', (req,res)=>{
 })
 
 // Postman check, Put request, JSON
+// http://localhost:5000/api/contacts/edit
 // {   
-// 	"id": "5ceea9da1c5b690b387d80b4",
-// 	"newname": "shaqr",
-// 	"newsurname": "dev",
+// 	"id": "5cf4e665b36537085c6af7c8", or "5cf4e683b36537085c6af7c9" or "5cf4e692b36537085c6af7ca"
+// 	"newname": "test1",
+// 	"newsurname": "test2",
 // 	"newphoneNumber": "5979754649"
 // } 
 router.put('/contacts/edit', (req,res)=>{
@@ -128,8 +128,11 @@ router.put('/contacts/edit', (req,res)=>{
 })
 
 // Postman check, delete request, JSON
+// http://localhost:5000/api/contacts/remove
 // {   
-//   "id":"5ceea9da1c5b690b387d80b4"
+//   "id":"5cf4e665b36537085c6af7c8" or 
+//   "id":"5cf4e683b36537085c6af7c9" or
+//   "id":"5cf4e692b36537085c6af7ca"
 // }
 router.delete('/contacts/remove', (req, res)=>{
     let delContact = req.body.id
