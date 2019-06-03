@@ -17,8 +17,7 @@ let contactSchema = new Schema ({
         type: String,
         required: true
     },
-    
-    
+    _creatorId: { type: Schema.Types.ObjectId, ref: "User" }
 
 });
 

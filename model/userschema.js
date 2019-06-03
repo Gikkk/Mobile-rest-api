@@ -19,7 +19,7 @@ let UserSchema = new Schema ({
         type: String,
         required: true
     },
-    Contacts : [{ type: Schema.Types.ObjectId, ref: 'contact' }]
+    _contactId: [{ type: Schema.Types.ObjectId, ref: "Contacts" }]
 
 });
 

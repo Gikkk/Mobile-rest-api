@@ -2,11 +2,17 @@ const express = require('express');
 const router = express.Router();
 const User = require('../model/userschema');
 const Contacts = require('../model/contact');
+const bcrypt = require('bcryptjs')
+const { check, validationResult } = require('express-validator/check');
 
 
 router.get('/register', (req, res)=>{
     res.send('Please register!!!')
 })
+
+router.get('/login',(req,res)=>{
+  res.send('Please login!!!')
+  })
 
 // Postman check, Post request, JSON
 // {
@@ -18,7 +24,7 @@ router.post('/register', (req, res)=>{
     const { email, username, password } = req.body;
     const status = "user"
     
-    res.send(req.body)
+    
     
 
     const newUser = new User({
@@ -28,14 +34,21 @@ router.post('/register', (req, res)=>{
         status: status
 
       });
-      newUser
-      .save()
-      .then(user => {
-        console.log(user);
-        
-      })
-      .catch(err => console.log(err));
- 
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err;
+          newUser.password = hash;
+          newUser
+            .save()
+            .then(user => {
+              console.log(hash);
+                
+            })
+            .catch(err => console.log(err)
+            );
+        });
+      })  
+    res.send(newUser) 
 })
 
 // Postman check, Post request, JSON
@@ -43,25 +56,25 @@ router.post('/register', (req, res)=>{
 // 	"email": "giogi@",
 // 	"password": "12345"
 // }
-router.get('/login',(req,res)=>{
-res.send('Please login!!!')
-})
 
-router.post('/login', (req,res)=>{       
-    User.findOne({ email: req.body.email}, function (err, docs) {                
-        if(docs === null){ 
-            res.send('email does not exists')
+
+router.post('/login', (req,res)=>{ 
+    const email = req.body.email;
+    const password = req.body.password   
+    User.findOne({ email}).then (user=>{
+        if(!user){
+          return res.status(404).json({email: 'Email does not exist'})
+        }
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) throw err;
+        if (isMatch) {              
+          res.send(user)
         } else {
-        if(docs.password === req.body.password){
-            res.send(docs)            
-        } else{
-            res.status(404).send('Wrong password')
-        }       
-      }
-
-        
-    });
-  
+          res.send('Password incorrect')
+          
+        }
+      });
+    }) 
 })
 
 // Postman check, Post request, JSON
@@ -131,6 +144,8 @@ router.delete('/contacts/remove', (req, res)=>{
       return res.status(200).send(response);
   });  
   });
+
+  
   
 
 module.exports = router;
